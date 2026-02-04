@@ -1,3 +1,4 @@
+package model; 
 public class Descendre extends Thread {
     // Attribut Position 
     private Position pos; 

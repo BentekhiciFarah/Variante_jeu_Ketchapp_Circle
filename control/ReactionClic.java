@@ -1,3 +1,5 @@
+package control; 
+import model.Position; 
 import java.awt.event.MouseAdapter; 
 import java.awt.event.MouseEvent; 
 

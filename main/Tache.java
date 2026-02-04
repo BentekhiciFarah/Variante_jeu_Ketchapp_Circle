@@ -1,3 +1,4 @@
+package main; 
 import java.util.Random;
 
 /** Cette classe implémente un thread simple qui compte jusqu'à 100 */

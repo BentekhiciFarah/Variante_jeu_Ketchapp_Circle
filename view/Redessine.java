@@ -1,4 +1,4 @@
-
+package view; 
 public class Redessine extends Thread {
 
     // Le nouvel Ovale 
@@ -18,7 +18,7 @@ public class Redessine extends Thread {
         while(true) {
             // Demander à Swing de redéssiner 
             monAffichage.repaint(); 
-
+            
             // Faire une pause entre deux raffraichissements 
             try {
                 Thread.sleep(DELAY); 
