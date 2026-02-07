@@ -105,18 +105,28 @@ public class Parcours {
     // ---- GENERATION OBJETS ----
 
     public synchronized void genererObjetPresDeLaLigne(Random rnd, int offMin, int offMax, int decalY) {
+        //  limiter le nombre d'objets (1 chance sur 4)
+        if (rnd.nextInt(4) != 0) return;
+
         Point last = points.get(points.size() - 1);
 
         int x = last.x + rnd.nextInt(offMax - offMin + 1) + offMin;
 
+        //  objet très proche de la ligne
+        int maxEcart = Math.max(3, decalY / 3); // très serré
+        int ecart = rnd.nextInt(maxEcart + 1);  // [0..maxEcart]
         int signe = rnd.nextBoolean() ? 1 : -1;
-        int y = last.y + signe * (rnd.nextInt(decalY) + 5);
 
-        if (y < Position.HAUTEUR_MIN) y = Position.HAUTEUR_OVALE;
-        if (y > Position.HAUTEUR_MAX) y = Position.HAUTEUR_OVALE;
+        int y = last.y + signe * ecart;
+
+        // 🔒 bornage propre
+        if (y < Position.HAUTEUR_MIN) y = Position.HAUTEUR_MIN + Position.HAUTEUR_OVALE;
+        if (y > Position.HAUTEUR_MAX) y = Position.HAUTEUR_MAX - Position.HAUTEUR_OVALE;
 
         objets.add(new Objet(x, y));
-    }
+}
+
+
 
     // ---- CAPTURE + SCORE ----
     // retourne true si au moins 1 capture a eu lieu (pour déclencher animation)

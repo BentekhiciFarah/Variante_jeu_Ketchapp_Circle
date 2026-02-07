@@ -9,7 +9,7 @@ public class Position {
     public static final int HAUTEUR_OVALE = 40; 
 
     // Borne de la hauteur 
-    public static final int HAUTEUR_MIN = 0; 
+    public static final int HAUTEUR_MIN = -10; 
     public static final int HAUTEUR_MAX = 200; 
 
     // Horizon 

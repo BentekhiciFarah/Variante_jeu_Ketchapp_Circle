@@ -1,13 +1,18 @@
 package view; 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.List;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JPanel;
+import model.Objet;
 import model.Parcours;
 import model.Position;
-import model.Objet;
-
 
 public class Affichage extends JPanel {
     // Définition des constantes pour les dimensions de la fenetre  
@@ -25,10 +30,37 @@ public class Affichage extends JPanel {
     private Position pos; 
     private Parcours ligne;
 
+    private final JButton scoreButton;
+    private final JPanel hud;
+
+
     // afficher l'ovale et la ligne brisée
     public Affichage(Position p, Parcours lb) {
         pos = p; 
         ligne = lb;
+
+        // Bouton de score
+                scoreButton = new JButton("Score : 0");
+
+        // agrandir le texte
+        scoreButton.setFont(new Font("Arial", Font.BOLD, 20));
+
+        // agrandir le bouton
+        scoreButton.setPreferredSize(new Dimension(200, 50));
+
+        // style HUD
+        scoreButton.setFocusable(false);
+        scoreButton.setEnabled(false);
+
+
+        // --- HUD (barre en haut) ---
+        hud = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        hud.setOpaque(true);
+        hud.setBackground(new Color(245, 245, 245));
+        hud.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+
+        hud.add(scoreButton);
+        add(hud, BorderLayout.NORTH);
 
         // Dimensions calculées à partir du modèle 
         int largeur_fenetre = (Position.BEFORE + Position.AFTER) * RATIO_X;
@@ -71,6 +103,9 @@ public class Affichage extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g); 
+        // Afficher le score dans le bouton du HUD
+        scoreButton.setText("Votre Score : " + pos.getScore());
+
 
         dessinerLigneBrisee(g);
         dessinerObjets(g);
@@ -79,9 +114,6 @@ public class Affichage extends JPanel {
         int OVALE_Y = (Position.HAUTEUR_MAX - pos.getHauteur() - Position.HAUTEUR_OVALE) * RATIO_Y; 
         int HAUTEUR_OVALE = Position.HAUTEUR_OVALE * RATIO_Y; 
         g.drawOval(POSITION_X, OVALE_Y, LARGEUR, HAUTEUR_OVALE); 
-
-        // Score
-        g.drawString("Score : " + pos.getScore(), 10, 20);
 
         // Animation capture (simple)
         if (pos.isFlashCapture()) {
