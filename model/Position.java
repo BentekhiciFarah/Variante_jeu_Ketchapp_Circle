@@ -6,7 +6,7 @@ public class Position {
     public static final int IMPULSION = 20; 
 
     // Hauteur de l'ovale 
-    public static final int HAUTEUR_OVALE = 80; 
+    public static final int HAUTEUR_OVALE = 30; 
 
     // Borne de la hauteur 
     public static final int HAUTEUR_MIN = -10; 
@@ -26,7 +26,7 @@ public class Position {
     private int avancement = 0;
 
     // Vitesse d'avancementé
-    public static final int VITESSE_AVANCEMENT = 1;
+    public static final int VITESSE_AVANCEMENT = 2;
 
     // score + animation de capture
     private int score = 0;

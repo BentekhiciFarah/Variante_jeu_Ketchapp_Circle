@@ -13,6 +13,7 @@ public class Parcours {
     public static final int PAS_X_MIN = 30;
     public static final int PAS_X_MAX = 35;
     public static final int DELTA_Y = 35;
+    private static final int MARGE_LIGNE = 80;
 
     private static final Random random = new Random();
 
@@ -37,8 +38,13 @@ public class Parcours {
             int deltaY = random.nextInt(2 * DELTA_Y + 1) - DELTA_Y;
             int newY = y + deltaY;
 
-            if (newY < Position.HAUTEUR_MIN) newY = Position.HAUTEUR_MIN;
-            if (newY > Position.HAUTEUR_MAX) newY = Position.HAUTEUR_MAX;
+            // Pour que la ligne ne soit pas trop proche des bords, on ajoute une marge
+            if (newY < Position.HAUTEUR_MIN)
+                newY = Position.HAUTEUR_MIN + MARGE_LIGNE;
+
+            if (newY > Position.HAUTEUR_MAX)
+                newY = Position.HAUTEUR_MAX - MARGE_LIGNE;
+
 
             y = newY;
             points.add(new Point(x, y));
@@ -96,8 +102,11 @@ public class Parcours {
         int deltaY = random.nextInt(2 * DELTA_Y + 1) - DELTA_Y;
         int y = last.y + deltaY;
 
-        if (y < Position.HAUTEUR_MIN) y = Position.HAUTEUR_OVALE;
-        if (y > Position.HAUTEUR_MAX) y = Position.HAUTEUR_OVALE;
+        if (y < Position.HAUTEUR_MIN + MARGE_LIGNE)
+            y = Position.HAUTEUR_MIN + MARGE_LIGNE;
+
+        if (y > Position.HAUTEUR_MAX - MARGE_LIGNE)
+            y = Position.HAUTEUR_MAX - MARGE_LIGNE;
 
         points.add(new Point(x, y));
     }
@@ -113,7 +122,7 @@ public class Parcours {
         int x = last.x + rnd.nextInt(offMax - offMin + 1) + offMin;
 
         //  objet très proche de la ligne
-        int maxEcart = Math.max(3, decalY / 3); // très serré
+        int maxEcart = Math.max(3, decalY / 3); // très serré de la ligne
         int ecart = rnd.nextInt(maxEcart + 1);  // [0..maxEcart]
         int signe = rnd.nextBoolean() ? 1 : -1;
 

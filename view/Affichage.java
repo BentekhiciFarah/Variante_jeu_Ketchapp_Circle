@@ -22,7 +22,7 @@ public class Affichage extends JPanel {
     public static final int RATIO_Y = 3; // hauteur 
 
     // Dimensions qui ne bougent pas  
-    public static final int OVALE_LARGEUR = 50; 
+    public static final int OVALE_LARGEUR = 20; 
 
     // LARGEUR et Position_X en utilisant RATIO
     public static final int LARGEUR = OVALE_LARGEUR * RATIO_X; 
@@ -148,7 +148,7 @@ public class Affichage extends JPanel {
 
         // Animation capture (simple)
         if (pos.isFlashCapture()) {
-            g.drawString("+1", POSITION_X + LARGEUR / 2, OVALE_Y - 8);
+            g.drawString("BOOM", POSITION_X + LARGEUR / 2, OVALE_Y - 8);
         }
     }
 
