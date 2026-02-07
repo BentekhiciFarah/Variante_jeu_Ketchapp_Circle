@@ -16,13 +16,34 @@ public class Position {
     public static final int BEFORE = 50; 
     public static final int AFTER = 200;
 
-    // hauteur au début + vitesse 
-    private int hauteur = 0;  
+    // Vitesse de chute
     public static final int VITESSE_CHUTE = 2;
+
+    // hauteur au début  
+    private int hauteur = HAUTEUR_MAX / 2;  
+
+    // Avancement de la position
+    private int avancement = 0;
+
+    // Vitesse d'avancementé
+    public static final int VITESSE_AVANCEMENT = 1; 
 
     // Récupérer la hauteur de l'attribut 
     public int getHauteur() {
         return hauteur; 
+    }
+
+    // Faire avancer la ligne de parcours
+    public void avancer() {
+        avancement += VITESSE_AVANCEMENT; 
+    }
+
+    public int getAvancement() {
+        return avancement; 
+    }
+
+    public void setAvancement(int avancement) {
+        this.avancement = avancement; 
     }
 
     // Ajouter un saut à la hauteur 

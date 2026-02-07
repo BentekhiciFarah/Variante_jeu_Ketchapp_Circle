@@ -2,6 +2,7 @@ package main;
 
 import control.ReactionClic;
 import javax.swing.JFrame;
+import model.Avancer;
 import model.Descendre;
 import model.Parcours;
 import model.Position;
@@ -18,7 +19,7 @@ public class Main {
 
         // Créer la position
         Position pos = new Position(); 
-        Parcours ligne = new Parcours();
+        Parcours ligne = new Parcours(pos);
 
         // Créer le composant d'affichage 
         Affichage affichage = new Affichage(pos, ligne); 
@@ -37,7 +38,7 @@ public class Main {
         // Afficher la fenetre 
         maFenetre.setVisible(true); 
         // Bloquer la taille de la fenetre 
-        maFenetre.setResizable(false); 
+       // maFenetre.setResizable(false); 
 
         // Thread qui dessine en continu 
         Redessine nv = new Redessine(affichage); 
@@ -46,5 +47,10 @@ public class Main {
         // Thread qui fait descendre automatiquement 
         Descendre desc = new Descendre(pos); 
         desc.start(); 
+
+        // Thread qui fait avancer automatiquement
+        Avancer av = new Avancer(pos, ligne);
+        av.start();
+
     }
 }
