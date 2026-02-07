@@ -5,7 +5,9 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.RenderingHints;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -88,17 +90,46 @@ public class Affichage extends JPanel {
         }
     }
 
-    // Dessiner les objets sur la ligne brisée
-    private void dessinerObjets(Graphics g) {
-        List<Objet> objets = ligne.getObjets(); // déjà décalés par -avancement
+    // Dessiner les objets en forme de gemme de couleur orange sur la ligne brisée
 
-        for (Objet o : objets) {
+    private void dessinerObjets(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g;
+
+        // Antialiasing pour un rendu plus propre
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                            RenderingHints.VALUE_ANTIALIAS_ON);
+
+        g2.setColor(new Color(255, 140, 0)); // couleur orange
+
+        for (Objet o : ligne.getObjets()) {
             int x = (o.x + Position.BEFORE) * RATIO_X;
             int y = (Position.HAUTEUR_MAX - o.y) * RATIO_Y;
-            g.fillOval(x - 6, y - 6, 12, 12);
+
+            int size = 14;
+
+            // forme diamant (losange)
+            int[] xs = {
+                x,
+                x + size / 2,
+                x,
+                x - size / 2
+            };
+
+            int[] ys = {
+                y - size / 2,
+                y,
+                y + size / 2,
+                y
+            };
+
+            g2.fillPolygon(xs, ys, 4);
+
+            // petit contour pour le style
+            g2.setColor(Color.BLACK);
+            g2.drawPolygon(xs, ys, 4);
+            g2.setColor(new Color(255, 140, 0));
         }
     }
-
 
     @Override
     public void paintComponent(Graphics g) {

@@ -6,7 +6,7 @@ public class Position {
     public static final int IMPULSION = 20; 
 
     // Hauteur de l'ovale 
-    public static final int HAUTEUR_OVALE = 40; 
+    public static final int HAUTEUR_OVALE = 80; 
 
     // Borne de la hauteur 
     public static final int HAUTEUR_MIN = -10; 
