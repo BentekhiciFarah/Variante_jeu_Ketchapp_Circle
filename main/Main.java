@@ -4,6 +4,8 @@ import control.ReactionClic;
 import javax.swing.JFrame;
 import model.Avancer;
 import model.Descendre;
+import model.GenerateurObjets;
+import model.Jeu;
 import model.Parcours;
 import model.Position;
 import view.Affichage;
@@ -51,6 +53,13 @@ public class Main {
         // Thread qui fait avancer automatiquement
         Avancer av = new Avancer(pos, ligne);
         av.start();
+        
+        // Thread qui génère des objets
+        GenerateurObjets gen = new GenerateurObjets(ligne);
+        gen.start();
 
+        // Thread qui gère le jeu
+        Jeu jeu = new Jeu(pos, ligne);
+        jeu.start();
     }
 }

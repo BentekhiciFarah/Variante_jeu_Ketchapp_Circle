@@ -17,7 +17,7 @@ public class Avancer extends Thread {
             pos.avancer();
             parcours.updatePourAvancement();
             try {
-                Thread.sleep(50); // Attendre 50 ms avant de faire avancer à nouveau
+                Thread.sleep(DELAY); // Attendre 50 ms avant de faire avancer à nouveau
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

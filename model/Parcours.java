@@ -5,96 +5,141 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-// générer une ligne brisée sous la forme d’une liste de points
 public class Parcours {
-    // la liste des points
-    private List<Point> points;
-      // l'écart en X entre XMIN et XMAX 
+    private final List<Point> points;
+    private final List<Objet> objets;
+    private final Position pos;
+
     public static final int PAS_X_MIN = 30;
     public static final int PAS_X_MAX = 35;
-
-    // l'écart en Y entre -DELTAY et +DELTAY
     public static final int DELTA_Y = 35;
-    private static final Random random = new Random();
 
-    private final Position pos;
+    private static final Random random = new Random();
 
     public Parcours(Position pos) {
         this.pos = pos;
-        points = new ArrayList<>();
+        this.points = new ArrayList<>();
+        this.objets = new ArrayList<>();
         genererLigneBrisee(pos.getHauteur());
     }
 
     private void genererLigneBrisee(int hauteurInitiale) {
-        // 1 er point avant BEFORE
         int x = -Position.BEFORE;
         int y = hauteurInitiale;
         points.add(new Point(x, y));
 
-        // 2e point à BEFORE + PAS X_MAX
-         x += PAS_X_MIN;
+        x += PAS_X_MIN;
         points.add(new Point(x, y));
 
-        // tant qu'on n'a pas dépassé BEFORE + AFTER
         while (x < Position.AFTER) {
-            // on augmente de PAS_X_MIN à PAS_X_MAX
             x += random.nextInt(PAS_X_MAX - PAS_X_MIN) + PAS_X_MIN;
-            // on choisit une nouvelle ordonnée aléatoire qui soit au plus à DELTA_Y de la précédente
-            // mais qui ne sort pas des bornes
-            int deltaY = random.nextInt(2 * DELTA_Y) - DELTA_Y;
+
+            int deltaY = random.nextInt(2 * DELTA_Y + 1) - DELTA_Y;
             int newY = y + deltaY;
 
-            // bornage Y
-            if (newY < Position.HAUTEUR_MIN) newY = Position.HAUTEUR_OVALE;
-            if (newY > Position.HAUTEUR_MAX) newY = Position.HAUTEUR_OVALE;
+            if (newY < Position.HAUTEUR_MIN) newY = Position.HAUTEUR_MIN;
+            if (newY > Position.HAUTEUR_MAX) newY = Position.HAUTEUR_MAX;
 
             y = newY;
             points.add(new Point(x, y));
         }
-    }    
-    
+    }
 
-    public List<Point> getPoints() {
+    // ---- GETTERS DECALÉs (la vue ne modifie pas le modèle) ----
+
+    public synchronized List<Point> getPoints() {
+        int av = pos.getAvancement();
         List<Point> decalage = new ArrayList<>(points.size());
-        int dx = pos.getAvancement();
-        for (Point p : points)
-            decalage.add(new Point(p.x - dx, p.y));
+        for (Point p : points) {
+            decalage.add(new Point(p.x - av, p.y));
+        }
         return decalage;
     }
 
-    // Met à jour la ligne de parcours en fonction de l'avancement
+    public synchronized List<Objet> getObjets() {
+        int av = pos.getAvancement();
+        List<Objet> res = new ArrayList<>();
+        for (Objet o : objets) {
+            if (!o.capture) {
+                // copie décalée pour affichage
+                Objet c = new Objet(o.x - av, o.y);
+                res.add(c);
+            }
+        }
+        return res;
+    }
+
+    // ---- LIGNE INFINIE ----
+
     public synchronized void updatePourAvancement() {
         int av = pos.getAvancement();
 
-        // 1) SUPPRESSION : si le 2e point (corrigé) est sorti à gauche,
-        // on supprime le 1er (sinon on perd la continuité du trait)
-        while (points.size() > 2 && (points.get(1).x - av) < -Position.BEFORE)
+        // Supprimer les points à gauche : si le 2e est déjà sorti, on enlève le 1er
+        while (points.size() > 2 && (points.get(1).x - av) < -Position.BEFORE) {
             points.remove(0);
-        
+        }
 
-        // 2) AJOUT : si le dernier point (corrigé) entre dans l'horizon,
-        // on ajoute un nouveau point à droite
+        // Ajouter des points à droite si la fin approche l'horizon
         while ((points.get(points.size() - 1).x - av) < Position.AFTER) {
             ajouterPointFin();
         }
+
+        // Nettoyage objets (capturés ou trop à gauche)
+        objets.removeIf(o -> o.capture || (o.x - av) < -Position.BEFORE);
     }
-    // Ajouter un point à la fin de la ligne
+
     private void ajouterPointFin() {
         Point last = points.get(points.size() - 1);
 
-        // Générer un nouveau point à droite du dernier, avec une variation aléatoire en Y
-        int x = last.x + random.nextInt(PAS_X_MAX - PAS_X_MIN) + PAS_X_MIN;
-        int variation = random.nextInt(2 * DELTA_Y + 1) - DELTA_Y;
-        int y = last.y + variation;
+        int x = last.x + random.nextInt(PAS_X_MAX - PAS_X_MIN + 1) + PAS_X_MIN;
 
-        // Eviter de sortir des bornes
-        if (y < Position.HAUTEUR_MIN / 2) {
-            y = Position.HAUTEUR_OVALE;
-        } else if (y > Position.HAUTEUR_MAX / 2) {
-            y = Position.HAUTEUR_OVALE; 
-        }
-        // Ajouter le nouveau point à la liste
+        int deltaY = random.nextInt(2 * DELTA_Y + 1) - DELTA_Y;
+        int y = last.y + deltaY;
+
+        if (y < Position.HAUTEUR_MIN) y = Position.HAUTEUR_OVALE;
+        if (y > Position.HAUTEUR_MAX) y = Position.HAUTEUR_OVALE;
+
         points.add(new Point(x, y));
     }
 
+    // ---- GENERATION OBJETS ----
+
+    public synchronized void genererObjetPresDeLaLigne(Random rnd, int offMin, int offMax, int decalY) {
+        Point last = points.get(points.size() - 1);
+
+        int x = last.x + rnd.nextInt(offMax - offMin + 1) + offMin;
+
+        int signe = rnd.nextBoolean() ? 1 : -1;
+        int y = last.y + signe * (rnd.nextInt(decalY) + 5);
+
+        if (y < Position.HAUTEUR_MIN) y = Position.HAUTEUR_OVALE;
+        if (y > Position.HAUTEUR_MAX) y = Position.HAUTEUR_OVALE;
+
+        objets.add(new Objet(x, y));
+    }
+
+    // ---- CAPTURE + SCORE ----
+    // retourne true si au moins 1 capture a eu lieu (pour déclencher animation)
+    public synchronized boolean testerCaptures(Position pos, int ovaleXModele, int margeX) {
+        int av = pos.getAvancement();
+
+        int yTop = pos.getHauteur();
+        int yBottom = yTop + Position.HAUTEUR_OVALE;
+
+        boolean captureAuMoinsUne = false;
+
+        for (Objet o : objets) {
+            if (o.capture) continue;
+
+            int xCorrige = o.x - av; // position visible dans le repère modèle
+            if (Math.abs(xCorrige - ovaleXModele) <= margeX) {
+                if (o.y >= yTop && o.y <= yBottom) {
+                    o.capture = true;
+                    pos.addScore(1);
+                    captureAuMoinsUne = true;
+                }
+            }
+        }
+        return captureAuMoinsUne;
+    }
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import javax.swing.JPanel;
 import model.Parcours;
 import model.Position;
+import model.Objet;
 
 
 public class Affichage extends JPanel {
@@ -55,13 +56,37 @@ public class Affichage extends JPanel {
         }
     }
 
+    // Dessiner les objets sur la ligne brisée
+    private void dessinerObjets(Graphics g) {
+        List<Objet> objets = ligne.getObjets(); // déjà décalés par -avancement
+
+        for (Objet o : objets) {
+            int x = (o.x + Position.BEFORE) * RATIO_X;
+            int y = (Position.HAUTEUR_MAX - o.y) * RATIO_Y;
+            g.fillOval(x - 6, y - 6, 12, 12);
+        }
+    }
+
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g); 
+
         dessinerLigneBrisee(g);
+        dessinerObjets(g);
+
+        // Dessiner l'ovale à sa position actuelle
         int OVALE_Y = (Position.HAUTEUR_MAX - pos.getHauteur() - Position.HAUTEUR_OVALE) * RATIO_Y; 
         int HAUTEUR_OVALE = Position.HAUTEUR_OVALE * RATIO_Y; 
         g.drawOval(POSITION_X, OVALE_Y, LARGEUR, HAUTEUR_OVALE); 
+
+        // Score
+        g.drawString("Score : " + pos.getScore(), 10, 20);
+
+        // Animation capture (simple)
+        if (pos.isFlashCapture()) {
+            g.drawString("+1", POSITION_X + LARGEUR / 2, OVALE_Y - 8);
+        }
     }
 
 }
