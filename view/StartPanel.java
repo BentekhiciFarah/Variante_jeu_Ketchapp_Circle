@@ -1,17 +1,18 @@
-package view; 
-import javax.swing.*;
+package view;
+
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import model.Parcours;
+import javax.swing.*;
 
 public class StartPanel extends JPanel {
-    private JButton startButton;
-    private JLabel titleLabel;
+    private final JButton startButton;
+    private final JLabel titleLabel;
 
-    public StartPanel() {
+    public StartPanel(Runnable onStart) {
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
+
+        // ✅ Taille de la fenêtre de démarrage (utilisée par pack() dans Main)
+        setPreferredSize(new Dimension(600, 400));
 
         titleLabel = new JLabel("The Circle", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 36));
@@ -19,15 +20,16 @@ public class StartPanel extends JPanel {
 
         startButton = new JButton("Start Game");
         startButton.setFont(new Font("Arial", Font.PLAIN, 24));
-        add(startButton, BorderLayout.SOUTH);
 
-        startButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Code pour démarrer le jeu
-                System.out.println("Game Started!");
-                // Vous pouvez ajouter ici la logique pour afficher le panneau de jeu
-            }
-        });
+        JPanel bottom = new JPanel();
+        bottom.setBackground(Color.WHITE);
+
+        // ✅ petit padding pour mieux respirer
+        bottom.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
+
+        bottom.add(startButton);
+        add(bottom, BorderLayout.SOUTH);
+
+        startButton.addActionListener(e -> onStart.run());
     }
 }
