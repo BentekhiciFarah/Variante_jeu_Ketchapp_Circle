@@ -26,6 +26,8 @@ public class Main {
             fenetre.setContentPane(startPanel);
 
             fenetre.pack();
+            // empêcher le redimensionnement pour garder les proportions
+            fenetre.setResizable(false);
             fenetre.setLocationRelativeTo(null);
             fenetre.setVisible(true);
         });
@@ -57,7 +59,6 @@ public class Main {
         new Descendre(pos).start();
         new Avancer(pos, ligne).start();
 
-        // Si tu n’as pas encore ces classes, commente ces 2 lignes
         new GenerateurObjets(ligne).start();
         new Jeu(pos, ligne).start();
     }
