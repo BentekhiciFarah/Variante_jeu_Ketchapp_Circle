@@ -55,7 +55,7 @@ public class Affichage extends JPanel {
         scoreButton.setEnabled(false);
 
 
-        // --- HUD (barre en haut) ---
+        // HUD (barre en haut)
         hud = new JPanel(new FlowLayout(FlowLayout.CENTER));
         hud.setOpaque(true);
         hud.setBackground(new Color(245, 245, 245));
@@ -95,7 +95,7 @@ public class Affichage extends JPanel {
     private void dessinerObjets(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
 
-        // Antialiasing pour un rendu plus propre
+        
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                             RenderingHints.VALUE_ANTIALIAS_ON);
 
@@ -107,7 +107,7 @@ public class Affichage extends JPanel {
 
             int size = 14;
 
-            // forme diamant (losange)
+            // forme diamant 
             int[] xs = {
                 x,
                 x + size / 2,
@@ -124,7 +124,7 @@ public class Affichage extends JPanel {
 
             g2.fillPolygon(xs, ys, 4);
 
-            // petit contour pour le style
+            // Contour
             g2.setColor(Color.BLACK);
             g2.drawPolygon(xs, ys, 4);
             g2.setColor(new Color(255, 140, 0));
@@ -148,7 +148,7 @@ public class Affichage extends JPanel {
 
         // Animation capture (simple)
         if (pos.isFlashCapture()) {
-            g.drawString("BOOM", POSITION_X + LARGEUR / 2, OVALE_Y - 8);
+            g.drawString("BOOOOOM", POSITION_X + LARGEUR / 2, OVALE_Y - 8);
         }
     }
 

@@ -8,7 +8,6 @@ public class Jeu extends Thread {
     public static final int DELAY = 20;
     public static final int MARGE_CAPTURE_X = 10;
 
-    // Dans ton repère : x=0 modèle correspond à l'ovale (centre vers BEFORE à l'écran)
     public static final int OVALE_X_MODELE = 0;
 
     public Jeu(Position p, Parcours parcours) {
