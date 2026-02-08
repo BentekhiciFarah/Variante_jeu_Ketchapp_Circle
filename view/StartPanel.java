@@ -11,7 +11,7 @@ public class StartPanel extends JPanel {
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
 
-        // ✅ Taille de la fenêtre de démarrage (utilisée par pack() dans Main)
+        // Taille de la fenêtre de démarrage
         setPreferredSize(new Dimension(600, 400));
 
         titleLabel = new JLabel("The Circle", SwingConstants.CENTER);
@@ -24,7 +24,7 @@ public class StartPanel extends JPanel {
         JPanel bottom = new JPanel();
         bottom.setBackground(Color.WHITE);
 
-        // ✅ petit padding pour mieux respirer
+        // Ajouter une marge autour du bouton
         bottom.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
 
         bottom.add(startButton);

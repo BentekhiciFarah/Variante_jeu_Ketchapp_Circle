@@ -26,7 +26,7 @@ public class Affichage extends JPanel {
 
     // LARGEUR et Position_X en utilisant RATIO
     public static final int LARGEUR = OVALE_LARGEUR * RATIO_X; 
-    public final int POSITION_X; // Sera calculée dans le constructeur affichage
+    public final int POSITION_X;
 
     // La position initiale de l'ovale 
     private Position pos; 
@@ -91,7 +91,6 @@ public class Affichage extends JPanel {
     }
 
     // Dessiner les objets en forme de gemme de couleur orange sur la ligne brisée
-
     private void dessinerObjets(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
 

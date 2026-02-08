@@ -1,7 +1,6 @@
 package view; 
 public class Redessine extends Thread {
 
-    // Le nouvel Ovale 
     private Affichage monAffichage; 
 
     // Délai entre deux raffraichissements 

@@ -111,7 +111,7 @@ public class Parcours {
         points.add(new Point(x, y));
     }
 
-    // ---- GENERATION OBJETS ----
+    // Objets : génération + capture
 
     public synchronized void genererObjetPresDeLaLigne(Random rnd, int offMin, int offMax, int decalY) {
         //  limiter le nombre d'objets (1 chance sur 4)
@@ -128,7 +128,7 @@ public class Parcours {
 
         int y = last.y + signe * ecart;
 
-        // 🔒 bornage propre
+        // bornage
         if (y < Position.HAUTEUR_MIN) y = Position.HAUTEUR_MIN + Position.HAUTEUR_OVALE;
         if (y > Position.HAUTEUR_MAX) y = Position.HAUTEUR_MAX - Position.HAUTEUR_OVALE;
 
@@ -137,7 +137,7 @@ public class Parcours {
 
 
 
-    // ---- CAPTURE + SCORE ----
+    
     // retourne true si au moins 1 capture a eu lieu (pour déclencher animation)
     public synchronized boolean testerCaptures(Position pos, int ovaleXModele, int margeX) {
         int av = pos.getAvancement();
@@ -150,7 +150,7 @@ public class Parcours {
         for (Objet o : objets) {
             if (o.capture) continue;
 
-            int xCorrige = o.x - av; // position visible dans le repère modèle
+            int xCorrige = o.x - av;
             if (Math.abs(xCorrige - ovaleXModele) <= margeX) {
                 if (o.y >= yTop && o.y <= yBottom) {
                     o.capture = true;
